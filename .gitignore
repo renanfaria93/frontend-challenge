@@ -14,7 +14,6 @@ dist-ssr
 
 # TypeScript
 *.tsbuildinfo
-*.d.ts
 
 # Generated files
 vite.config.js

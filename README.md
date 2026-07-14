@@ -12,7 +12,7 @@ Monorepo com dois projetos independentes:
 
 ```
 /frontend       aplicação React que consome a API (ver frontend/README.md)
-/contract   especificação OpenAPI + Swagger UI (ver contract/README.md)
+/contract       especificação OpenAPI + Swagger UI (ver contract/README.md)
 docker-compose.yml
 ```
 

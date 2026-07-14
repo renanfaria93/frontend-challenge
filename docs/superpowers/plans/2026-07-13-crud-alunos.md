@@ -31,9 +31,11 @@ Este plano assume que o plano de Fundação (`docs/superpowers/plans/2026-07-13-
 ### Task 1: Instalar componentes shadcn adicionais para formulários
 
 **Files:**
+
 - Create: `src/components/ui/select.tsx`, `src/components/ui/form.tsx`, `src/components/ui/label.tsx`
 
 **Interfaces:**
+
 - Produces: `Select, SelectContent, SelectItem, SelectTrigger, SelectValue` (`@/components/ui/select`); `Form, FormControl, FormField, FormItem, FormLabel, FormMessage` (`@/components/ui/form`, integra `react-hook-form` com estilos shadcn); `Label` (`@/components/ui/label`). Usados por `AlunoFormFields` (Task 4).
 
 - [ ] **Step 1: Instalar os componentes**
@@ -62,9 +64,11 @@ git commit -m "chore: adiciona componentes shadcn select, form e label"
 ### Task 2: Hook `useAlunos` (via `entityFactory`)
 
 **Files:**
+
 - Create: `src/features/alunos/useAlunos.ts`
 
 **Interfaces:**
+
 - Consumes: `createEntityHooks` (`@/api/entityFactory`), `Aluno`, `AlunoInput` (`@/types/aluno`)
 - Produces: `useAlunos(): UseQueryResult<Aluno[]>`, `useCreateAluno(): UseMutationResult<Aluno, unknown, AlunoInput>`, `useUpdateAluno(): UseMutationResult<Aluno, unknown, { id: number; input: AlunoInput }>`, `useDeleteAluno(): UseMutationResult<void, unknown, number>`. Usados por `AlunosPage` (Task 5).
 
@@ -102,9 +106,11 @@ git commit -m "feat: adiciona hooks useAlunos via entityFactory"
 ### Task 3: Schema de validação `alunoSchema` (Zod)
 
 **Files:**
+
 - Create: `src/features/alunos/alunoSchema.ts`
 
 **Interfaces:**
+
 - Produces: `alunoSchema: ZodSchema<AlunoFormValues>` e `type AlunoFormValues = { nome: string; email: string; matricula: string; dataNascimento: string; status: "ativo" | "inativo" }`. `AlunoFormValues` é estruturalmente igual a `AlunoInput` (`@/types/aluno`) e é usado por `AlunoFormFields` (Task 4) e `AlunosPage` (Task 5) como o tipo do formulário `react-hook-form`.
 
 - [ ] **Step 1: Criar `src/features/alunos/alunoSchema.ts`**
@@ -145,9 +151,11 @@ git commit -m "feat: adiciona schema de validacao alunoSchema"
 **Antes de implementar:** invocar a skill `frontend-design` (formulário de entidade).
 
 **Files:**
+
 - Create: `src/features/alunos/AlunoFormFields.tsx`
 
 **Interfaces:**
+
 - Consumes: `Form, FormControl, FormField, FormItem, FormLabel, FormMessage` (`@/components/ui/form`, Task 1), `Input` (`@/components/ui/input`), `Select, SelectContent, SelectItem, SelectTrigger, SelectValue` (`@/components/ui/select`, Task 1), `UseFormReturn<AlunoFormValues>` (`react-hook-form`), `AlunoFormValues` (`@/features/alunos/alunoSchema`, Task 3)
 - Produces: `AlunoFormFields({ form }: { form: UseFormReturn<AlunoFormValues> })` — renderiza os campos `nome`, `email`, `matricula`, `dataNascimento`, `status`. Usado dentro do `FormModal` em `AlunosPage` (Task 5).
 
@@ -157,22 +165,9 @@ git commit -m "feat: adiciona schema de validacao alunoSchema"
 
 ```tsx
 import type { UseFormReturn } from "react-hook-form";
-import {
-  Form,
-  FormControl,
-  FormField,
-  FormItem,
-  FormLabel,
-  FormMessage,
-} from "@/components/ui/form";
+import { Form, FormControl, FormField, FormItem, FormLabel, FormMessage } from "@/components/ui/form";
 import { Input } from "@/components/ui/input";
-import {
-  Select,
-  SelectContent,
-  SelectItem,
-  SelectTrigger,
-  SelectValue,
-} from "@/components/ui/select";
+import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select";
 import type { AlunoFormValues } from "./alunoSchema";
 
 interface AlunoFormFieldsProps {
@@ -284,9 +279,11 @@ git commit -m "feat: adiciona AlunoFormFields"
 **Antes de implementar:** invocar a skill `frontend-design` (tela completa de listagem).
 
 **Files:**
+
 - Create: `src/features/alunos/AlunosPage.tsx`
 
 **Interfaces:**
+
 - Consumes: `useAlunos` (Task 2), `PageContainer`, `PageHeader`, `SectionCard`, `DataTable`, `DataTableColumn`, `SearchInput`, `StatusBadge`, `LoadingState`, `ErrorState`, `EmptyState` (`@/components/shared/*`, Fundação), `Button` (`@/components/ui/button`), `Select*` (`@/components/ui/select`, Task 1), `Aluno` (`@/types/aluno`)
 - Produces: `AlunosPage()` — componente de página completo, default export usado em `src/App.tsx` (Task 8) na rota `/alunos`.
 
@@ -307,13 +304,7 @@ import { LoadingState } from "@/components/shared/LoadingState";
 import { ErrorState } from "@/components/shared/ErrorState";
 import { EmptyState } from "@/components/shared/EmptyState";
 import { Button } from "@/components/ui/button";
-import {
-  Select,
-  SelectContent,
-  SelectItem,
-  SelectTrigger,
-  SelectValue,
-} from "@/components/ui/select";
+import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select";
 import { getApiErrorMessage } from "@/api/client";
 import type { Aluno } from "@/types/aluno";
 import { useAlunos } from "./useAlunos";
@@ -337,11 +328,7 @@ export default function AlunosPage() {
     if (!alunos) return [];
     const term = search.trim().toLowerCase();
     return alunos.filter((aluno) => {
-      const matchesSearch =
-        term.length === 0 ||
-        aluno.nome.toLowerCase().includes(term) ||
-        aluno.email.toLowerCase().includes(term) ||
-        aluno.matricula.toLowerCase().includes(term);
+      const matchesSearch = term.length === 0 || aluno.nome.toLowerCase().includes(term) || aluno.email.toLowerCase().includes(term) || aluno.matricula.toLowerCase().includes(term);
       const matchesStatus = statusFilter === "todos" || aluno.status === statusFilter;
       return matchesSearch && matchesStatus;
     });
@@ -362,20 +349,10 @@ export default function AlunosPage() {
       className: "text-right",
       render: (aluno) => (
         <div className="flex justify-end gap-2">
-          <Button
-            variant="ghost"
-            size="icon"
-            aria-label={`Editar ${aluno.nome}`}
-            onClick={() => setFormState({ open: true, aluno })}
-          >
+          <Button variant="ghost" size="icon" aria-label={`Editar ${aluno.nome}`} onClick={() => setFormState({ open: true, aluno })}>
             <Pencil className="h-4 w-4" />
           </Button>
-          <Button
-            variant="ghost"
-            size="icon"
-            aria-label={`Excluir ${aluno.nome}`}
-            onClick={() => setDeleteTarget(aluno)}
-          >
+          <Button variant="ghost" size="icon" aria-label={`Excluir ${aluno.nome}`} onClick={() => setDeleteTarget(aluno)}>
             <Trash2 className="h-4 w-4" />
           </Button>
         </div>
@@ -398,15 +375,8 @@ export default function AlunosPage() {
 
       <SectionCard>
         <div className="mb-4 flex flex-col gap-3 sm:flex-row sm:items-center">
-          <SearchInput
-            value={search}
-            onChange={setSearch}
-            placeholder="Buscar por nome, email ou matrícula..."
-          />
-          <Select
-            value={statusFilter}
-            onValueChange={(value) => setStatusFilter(value as StatusFilter)}
-          >
+          <SearchInput value={search} onChange={setSearch} placeholder="Buscar por nome, email ou matrícula..." />
+          <Select value={statusFilter} onValueChange={(value) => setStatusFilter(value as StatusFilter)}>
             <SelectTrigger className="sm:w-48">
               <SelectValue placeholder="Status" />
             </SelectTrigger>
@@ -420,46 +390,21 @@ export default function AlunosPage() {
 
         {isLoading ? <LoadingState label="Carregando alunos..." /> : null}
 
-        {isError ? (
-          <ErrorState message={getApiErrorMessage(error)} onRetry={() => refetch()} />
-        ) : null}
+        {isError ? <ErrorState message={getApiErrorMessage(error)} onRetry={() => refetch()} /> : null}
 
         {!isLoading && !isError && filteredAlunos.length === 0 ? (
           <EmptyState
-            title={
-              alunos && alunos.length > 0
-                ? "Nenhum aluno encontrado para os filtros atuais."
-                : "Nenhum aluno cadastrado ainda."
-            }
-            description={
-              alunos && alunos.length > 0
-                ? "Ajuste a busca ou o filtro de status."
-                : "Comece cadastrando o primeiro aluno."
-            }
+            title={alunos && alunos.length > 0 ? "Nenhum aluno encontrado para os filtros atuais." : "Nenhum aluno cadastrado ainda."}
+            description={alunos && alunos.length > 0 ? "Ajuste a busca ou o filtro de status." : "Comece cadastrando o primeiro aluno."}
             actionLabel={alunos && alunos.length > 0 ? undefined : "Novo aluno"}
-            onAction={
-              alunos && alunos.length > 0
-                ? undefined
-                : () => setFormState({ open: true, aluno: null })
-            }
+            onAction={alunos && alunos.length > 0 ? undefined : () => setFormState({ open: true, aluno: null })}
           />
         ) : null}
 
-        {!isLoading && !isError && filteredAlunos.length > 0 ? (
-          <DataTable
-            key={`${search}-${statusFilter}`}
-            data={filteredAlunos}
-            columns={columns}
-            getRowId={(aluno) => aluno.id}
-          />
-        ) : null}
+        {!isLoading && !isError && filteredAlunos.length > 0 ? <DataTable key={`${search}-${statusFilter}`} data={filteredAlunos} columns={columns} getRowId={(aluno) => aluno.id} /> : null}
       </SectionCard>
 
-      <AlunoFormModal
-        open={formState.open}
-        aluno={formState.aluno}
-        onOpenChange={(open) => setFormState((current) => ({ ...current, open }))}
-      />
+      <AlunoFormModal open={formState.open} aluno={formState.aluno} onOpenChange={(open) => setFormState((current) => ({ ...current, open }))} />
 
       <AlunoDeleteDialog aluno={deleteTarget} onOpenChange={(open) => !open && setDeleteTarget(null)} />
     </PageContainer>
@@ -482,9 +427,11 @@ Esperado: **falha** nesta etapa (`AlunoFormModal` e `AlunoDeleteDialog` ainda n�
 ### Task 6: `AlunoFormModal` — criação/edição via `FormModal`
 
 **Files:**
+
 - Create: `src/features/alunos/AlunoFormModal.tsx`
 
 **Interfaces:**
+
 - Consumes: `FormModal` (`@/components/shared/FormModal`, Fundação), `AlunoFormFields` (Task 4), `alunoSchema`, `AlunoFormValues` (Task 3), `useCreateAluno`, `useUpdateAluno` (Task 2), `Aluno` (`@/types/aluno`), `zodResolver` (`@hookform/resolvers/zod`), `useForm` (`react-hook-form`)
 - Produces: `AlunoFormModal({ open, aluno, onOpenChange }: { open: boolean; aluno: Aluno | null; onOpenChange: (open: boolean) => void })`. Quando `aluno` é `null`, opera em modo criação; quando não-nulo, em modo edição (formulário pré-preenchido). Consumido por `AlunosPage` (Task 5).
 
@@ -542,10 +489,7 @@ export function AlunoFormModal({ open, aluno, onOpenChange }: AlunoFormModalProp
 
   function handleValid(values: AlunoFormValues) {
     if (isEditing) {
-      updateAluno.mutate(
-        { id: aluno.id, input: values },
-        { onSuccess: () => onOpenChange(false) },
-      );
+      updateAluno.mutate({ id: aluno.id, input: values }, { onSuccess: () => onOpenChange(false) });
     } else {
       createAluno.mutate(values, { onSuccess: () => onOpenChange(false) });
     }
@@ -556,9 +500,7 @@ export function AlunoFormModal({ open, aluno, onOpenChange }: AlunoFormModalProp
       open={open}
       onOpenChange={onOpenChange}
       title={isEditing ? "Editar aluno" : "Novo aluno"}
-      description={
-        isEditing ? "Atualize os dados do aluno." : "Preencha os dados do novo aluno."
-      }
+      description={isEditing ? "Atualize os dados do aluno." : "Preencha os dados do novo aluno."}
       onSubmit={form.handleSubmit(handleValid)}
       isSubmitting={isSubmitting}
       submitLabel={isEditing ? "Salvar alterações" : "Criar aluno"}
@@ -582,9 +524,11 @@ Esperado: **ainda falha** (`AlunoDeleteDialog` da Task 7 falta) — esperado nes
 ### Task 7: `AlunoDeleteDialog` — exclusão via `ConfirmDialog`
 
 **Files:**
+
 - Create: `src/features/alunos/AlunoDeleteDialog.tsx`
 
 **Interfaces:**
+
 - Consumes: `ConfirmDialog` (`@/components/shared/ConfirmDialog`, Fundação), `useDeleteAluno` (Task 2), `Aluno` (`@/types/aluno`)
 - Produces: `AlunoDeleteDialog({ aluno, onOpenChange }: { aluno: Aluno | null; onOpenChange: (open: boolean) => void })`. O diálogo fica visível (`open={aluno !== null}`) sempre que `aluno` não é `null`. Consumido por `AlunosPage` (Task 5).
 
@@ -608,11 +552,7 @@ export function AlunoDeleteDialog({ aluno, onOpenChange }: AlunoDeleteDialogProp
       open={aluno !== null}
       onOpenChange={onOpenChange}
       title="Excluir aluno"
-      description={
-        aluno
-          ? `Tem certeza que deseja excluir "${aluno.nome}"? Esta ação não pode ser desfeita.`
-          : ""
-      }
+      description={aluno ? `Tem certeza que deseja excluir "${aluno.nome}"? Esta ação não pode ser desfeita.` : ""}
       isConfirming={deleteAluno.isPending}
       onConfirm={() => {
         if (!aluno) return;
@@ -643,9 +583,11 @@ git commit -m "feat: adiciona AlunosPage com formulario e exclusao de alunos"
 ### Task 8: Conectar `/alunos` em `App.tsx`
 
 **Files:**
+
 - Modify: `src/App.tsx:1-19` (arquivo criado na Task 15 do plano de Fundação)
 
 **Interfaces:**
+
 - Consumes: `AlunosPage` (`@/features/alunos/AlunosPage`, Task 5, default export)
 
 - [ ] **Step 1: Adicionar o import de `AlunosPage` em `src/App.tsx`**
@@ -680,13 +622,14 @@ Esperado: build conclui sem erros.
 
 - [ ] **Step 4: Verificar manualmente com a API rodando**
 
-Este passo requer uma API real respondendo em `VITE_API_URL` (ex.: `http://localhost:3000`), implementando ao menos `GET/POST/PUT/DELETE /alunos` conforme `api-contract/openapi.yaml`. Sem uma API no ar, a tela mostrará o `ErrorState` — o que também é um resultado válido para confirmar que a chamada de API real está sendo feita (nenhum dado mockado aparece).
+Este passo requer uma API real respondendo em `VITE_API_URL` (ex.: `http://localhost:3000`), implementando ao menos `GET/POST/PUT/DELETE /alunos` conforme `contract/openapi.yaml`. Sem uma API no ar, a tela mostrará o `ErrorState` — o que também é um resultado válido para confirmar que a chamada de API real está sendo feita (nenhum dado mockado aparece).
 
 ```bash
 npm run dev
 ```
 
 Abrir `http://localhost:5173/alunos` e, se a API estiver disponível, confirmar:
+
 - Lista de alunos carregada da API aparece na tabela.
 - Buscar por nome/email/matrícula filtra a tabela; filtrar por status também.
 - "Novo aluno" abre o `FormModal`; submeter cria o aluno via `POST /alunos`, fecha o modal e mostra toast de sucesso; a lista atualiza sem reload.

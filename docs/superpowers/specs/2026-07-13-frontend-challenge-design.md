@@ -7,6 +7,7 @@ Frontend completo de um mini-SaaS administrativo (estilo sistema admin), que ser
 ## Objetivo
 
 Entregar:
+
 1. Uma aplicação React funcional, com CRUD completo de Alunos, Professores e Disciplinas, mais uma Dashboard de resumo.
 2. Um contrato de API (OpenAPI + Swagger UI estático) que os alunos usam como especificação para implementar o backend.
 3. Uma imagem Docker do frontend e instruções de setup, para que qualquer aluno consiga rodar o frontend apontando para a própria API.
@@ -60,7 +61,7 @@ frontend-challenge/
 │   │   └── utils.ts
 │   ├── App.tsx                   # rotas
 │   └── main.tsx
-├── api-contract/
+├── contract/
 │   ├── openapi.yaml               # contrato fonte da verdade
 │   ├── index.html                 # Swagger UI estático (lê openapi.yaml local)
 │   └── README.md                  # como visualizar/consumir o contrato
@@ -129,7 +130,7 @@ Sem endpoint dedicado de dashboard: os totais exibidos são `array.length` das 3
 
 **Erros**: qualquer falha (400/404/409/500) retorna corpo `{ "message": string }`. O frontend exibe essa mensagem diretamente (via toast em mutations, via `ErrorState` em falhas de listagem). Regras de negócio como impedir exclusão de um professor/aluno referenciado em uma disciplina são decisão do backend de cada aluno; o frontend apenas repassa a mensagem de erro retornada.
 
-O `openapi.yaml` em `api-contract/` é a fonte da verdade formal deste contrato (schemas, exemplos de request/response, códigos de status).
+O `openapi.yaml` em `contract/` é a fonte da verdade formal deste contrato (schemas, exemplos de request/response, códigos de status).
 
 ## Arquitetura frontend
 
@@ -164,8 +165,8 @@ Todas as telas de CRUD seguem o mesmo padrão:
 
 - `Dockerfile` multi-stage: stage 1 (`node:alpine`) builda a app Vite recebendo `VITE_API_URL` como build-arg (variáveis Vite são embutidas em build-time); stage 2 (`nginx:alpine`) serve os arquivos estáticos com fallback de SPA (`nginx.conf`).
 - `.env.example` documentando `VITE_API_URL`.
-- `README.md` raiz cobre: visão geral do desafio, stack, setup local (`npm install`, `npm run dev`), variáveis de ambiente, como buildar/rodar via Docker, e um resumo legível do contrato de API com link para `api-contract/`.
-- `api-contract/README.md` explica como abrir o `index.html` (Swagger UI estático apontando para `openapi.yaml` local, sem necessidade de build) para consulta interativa do contrato.
+- `README.md` raiz cobre: visão geral do desafio, stack, setup local (`npm install`, `npm run dev`), variáveis de ambiente, como buildar/rodar via Docker, e um resumo legível do contrato de API com link para `contract/`.
+- `contract/README.md` explica como abrir o `index.html` (Swagger UI estático apontando para `openapi.yaml` local, sem necessidade de build) para consulta interativa do contrato.
 
 ## Fora de escopo
 

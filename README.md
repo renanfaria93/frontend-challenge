@@ -1,44 +1,37 @@
 # Frontend Challenge
 
-Frontend completo de um mini-SaaS administrativo, disponibilizado como desafio para você implementar o backend (API REST + banco de dados). Este repositório **não contém nenhum backend nem dado mockado** — toda informação exibida na tela vem da API que você vai construir, seguindo o contrato documentado em [`api-contract/`](./api-contract).
+Frontend completo de um mini-SaaS administrativo, disponibilizado como desafio para você implementar o backend (API REST + banco de dados). Este repositório **não contém nenhum backend nem dado mockado** — toda informação exibida na tela vem da API que você vai construir, seguindo o contrato documentado em [`contract/`](./contract).
 
 ## O desafio
 
-Implemente uma API REST (na linguagem/framework de sua escolha) que sirva o CRUD de três entidades — **Alunos**, **Professores** e **Disciplinas** — seguindo exatamente o contrato descrito em [`api-contract/openapi.yaml`](./api-contract/openapi.yaml). Depois de rodar sua API, aponte este frontend para ela (via `VITE_API_URL`) e todas as telas passam a funcionar com dados reais.
+Implemente uma API REST (na linguagem/framework de sua escolha) que sirva o CRUD de três entidades — **Alunos**, **Professores** e **Disciplinas** — seguindo exatamente o contrato descrito em [`contract/openapi.yaml`](./contract/openapi.yaml). Depois de rodar sua API, aponte o frontend para ela (via `VITE_API_URL`) e todas as telas passam a funcionar com dados reais.
 
-## Stack do frontend
+## Estrutura do repositório
 
-React + Vite + TypeScript, React Router, Tailwind CSS, shadcn/ui, Lucide React, React Hook Form + Zod, Axios, TanStack Query.
+Monorepo com dois projetos independentes:
 
-## Rodando localmente
-
-Pré-requisitos: Node.js 20+ e uma API rodando localmente (ou acessível via URL).
-
-```bash
-npm install
-cp .env.example .env
-# edite .env se sua API não estiver em http://localhost:3000
-npm run dev
+```
+/frontend       aplicação React que consome a API (ver frontend/README.md)
+/contract   especificação OpenAPI + Swagger UI (ver contract/README.md)
+docker-compose.yml
 ```
 
-Acesse `http://localhost:5173`.
+## Rodando tudo com Docker
 
-## Variáveis de ambiente
-
-| Variável | Descrição | Padrão |
-|---|---|---|
-| `VITE_API_URL` | URL base da API REST que o frontend vai consumir | `http://localhost:3000` |
-
-`VITE_API_URL` é embutida no bundle em **build-time** (comportamento padrão do Vite) — ao buildar a imagem Docker, ela precisa ser passada como build-arg (veja abaixo), não como variável de ambiente do container em runtime.
-
-## Rodando com Docker
+Pré-requisito: Docker e Docker Compose instalados.
 
 ```bash
-docker build --build-arg VITE_API_URL=http://localhost:3000 -t frontend-challenge .
-docker run -p 8080:80 frontend-challenge
+git clone <url-deste-repositorio>
+cd frontend-challenge
+VITE_API_URL=http://localhost:3000 docker compose up --build
 ```
 
-Acesse `http://localhost:8080`. A chamada HTTP para a API acontece no navegador do usuário (não dentro do container) — aponte `VITE_API_URL` para um endereço acessível pelo navegador de quem for acessar a aplicação.
+- Frontend: `http://localhost:8080`
+- Swagger UI do contrato: `http://localhost:4000`
+
+`VITE_API_URL` deve apontar para a API que você implementou (padrão `http://localhost:3000` se a variável for omitida). Ela é embutida no bundle em **build-time**, então trocar a URL exige `docker compose up --build` novamente.
+
+Para rodar cada projeto individualmente (sem Docker, com hot-reload) veja [`frontend/README.md`](./frontend/README.md). Para consultar o contrato interativamente veja [`contract/README.md`](./contract/README.md).
 
 ## Contrato de API (resumo)
 
@@ -63,7 +56,7 @@ DELETE /disciplinas/:id   -> (204)
 
 Qualquer erro (400/404/409/500) deve retornar corpo `{ "message": string }` — o frontend exibe essa mensagem diretamente (via toast em mutations, via tela de erro em falhas de listagem).
 
-A especificação completa (schemas, exemplos, códigos de status) está em [`api-contract/openapi.yaml`](./api-contract/openapi.yaml). Para consultar interativamente via Swagger UI, veja [`api-contract/README.md`](./api-contract/README.md).
+A especificação completa (schemas, exemplos, códigos de status) está em [`contract/openapi.yaml`](./contract/openapi.yaml). Para consultar interativamente via Swagger UI, veja [`contract/README.md`](./contract/README.md).
 
 ## Modelo de dados
 

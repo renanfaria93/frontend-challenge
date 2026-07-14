@@ -32,9 +32,11 @@ Este plano assume que o plano de Fundação já foi executado (tipos, `createEnt
 ### Task 1: Garantir componentes shadcn de formulário instalados
 
 **Files:**
+
 - Create (se ainda não existirem): `src/components/ui/select.tsx`, `src/components/ui/form.tsx`, `src/components/ui/label.tsx`
 
 **Interfaces:**
+
 - Produces: `Select*` (`@/components/ui/select`), `Form*` (`@/components/ui/form`), `Label` (`@/components/ui/label`). Usados por `DisciplinaFormFields` (Task 5).
 
 - [ ] **Step 1: Verificar se já existem**
@@ -73,9 +75,11 @@ git commit -m "chore: adiciona componentes shadcn select, form e label"
 **Antes de implementar:** invocar a skill `frontend-design` (componente de UI).
 
 **Files:**
+
 - Create: `src/components/ui/multi-select.tsx`
 
 **Interfaces:**
+
 - Consumes: `Popover, PopoverContent, PopoverTrigger` (`@/components/ui/popover`), `Command, CommandEmpty, CommandGroup, CommandInput, CommandItem, CommandList` (`@/components/ui/command`), `Badge` (`@/components/ui/badge`), `Button` (`@/components/ui/button`), `cn` (`@/lib/utils`)
 - Produces: `interface MultiSelectOption { value: number; label: string }` e `MultiSelect({ options, selected, onChange, placeholder }: { options: MultiSelectOption[]; selected: number[]; onChange: (selected: number[]) => void; placeholder?: string })`. Usado pelo campo `alunosIds` em `DisciplinaFormFields` (Task 5).
 
@@ -102,14 +106,7 @@ import { useState } from "react";
 import { Check, ChevronsUpDown, X } from "lucide-react";
 import { Badge } from "@/components/ui/badge";
 import { Button } from "@/components/ui/button";
-import {
-  Command,
-  CommandEmpty,
-  CommandGroup,
-  CommandInput,
-  CommandItem,
-  CommandList,
-} from "@/components/ui/command";
+import { Command, CommandEmpty, CommandGroup, CommandInput, CommandItem, CommandList } from "@/components/ui/command";
 import { Popover, PopoverContent, PopoverTrigger } from "@/components/ui/popover";
 import { cn } from "@/lib/utils";
 
@@ -125,20 +122,11 @@ interface MultiSelectProps {
   placeholder?: string;
 }
 
-export function MultiSelect({
-  options,
-  selected,
-  onChange,
-  placeholder = "Selecione...",
-}: MultiSelectProps) {
+export function MultiSelect({ options, selected, onChange, placeholder = "Selecione..." }: MultiSelectProps) {
   const [open, setOpen] = useState(false);
 
   function toggle(value: number) {
-    onChange(
-      selected.includes(value)
-        ? selected.filter((item) => item !== value)
-        : [...selected, value],
-    );
+    onChange(selected.includes(value) ? selected.filter((item) => item !== value) : [...selected, value]);
   }
 
   function remove(value: number) {
@@ -150,13 +138,7 @@ export function MultiSelect({
   return (
     <Popover open={open} onOpenChange={setOpen}>
       <PopoverTrigger asChild>
-        <Button
-          type="button"
-          variant="outline"
-          role="combobox"
-          aria-expanded={open}
-          className="h-auto min-h-9 w-full justify-between font-normal"
-        >
+        <Button type="button" variant="outline" role="combobox" aria-expanded={open} className="h-auto min-h-9 w-full justify-between font-normal">
           <div className="flex flex-wrap gap-1">
             {selectedOptions.length === 0 ? (
               <span className="text-muted-foreground">{placeholder}</span>
@@ -187,17 +169,8 @@ export function MultiSelect({
             <CommandEmpty>Nenhum resultado encontrado.</CommandEmpty>
             <CommandGroup>
               {options.map((option) => (
-                <CommandItem
-                  key={option.value}
-                  value={option.label}
-                  onSelect={() => toggle(option.value)}
-                >
-                  <Check
-                    className={cn(
-                      "mr-2 h-4 w-4",
-                      selected.includes(option.value) ? "opacity-100" : "opacity-0",
-                    )}
-                  />
+                <CommandItem key={option.value} value={option.label} onSelect={() => toggle(option.value)}>
+                  <Check className={cn("mr-2 h-4 w-4", selected.includes(option.value) ? "opacity-100" : "opacity-0")} />
                   {option.label}
                 </CommandItem>
               ))}
@@ -230,9 +203,11 @@ git commit -m "feat: adiciona MultiSelect (popover + command + badge)"
 ### Task 3: Hook `useDisciplinas` (via `entityFactory`)
 
 **Files:**
+
 - Create: `src/features/disciplinas/useDisciplinas.ts`
 
 **Interfaces:**
+
 - Consumes: `createEntityHooks` (`@/api/entityFactory`), `Disciplina`, `DisciplinaInput` (`@/types/disciplina`)
 - Produces: `useDisciplinas(): UseQueryResult<Disciplina[]>`, `useCreateDisciplina(): UseMutationResult<Disciplina, unknown, DisciplinaInput>`, `useUpdateDisciplina(): UseMutationResult<Disciplina, unknown, { id: number; input: DisciplinaInput }>`, `useDeleteDisciplina(): UseMutationResult<void, unknown, number>`. Usados por `DisciplinasPage` (Task 6).
 
@@ -242,10 +217,7 @@ git commit -m "feat: adiciona MultiSelect (popover + command + badge)"
 import { createEntityHooks } from "@/api/entityFactory";
 import type { Disciplina, DisciplinaInput } from "@/types/disciplina";
 
-const disciplinaHooks = createEntityHooks<Disciplina, DisciplinaInput>(
-  "disciplinas",
-  "Disciplina",
-);
+const disciplinaHooks = createEntityHooks<Disciplina, DisciplinaInput>("disciplinas", "Disciplina");
 
 export const useDisciplinas = disciplinaHooks.useList;
 export const useCreateDisciplina = disciplinaHooks.useCreate;
@@ -273,9 +245,11 @@ git commit -m "feat: adiciona hooks useDisciplinas via entityFactory"
 ### Task 4: Schema de validação `disciplinaSchema` (Zod)
 
 **Files:**
+
 - Create: `src/features/disciplinas/disciplinaSchema.ts`
 
 **Interfaces:**
+
 - Produces: `disciplinaSchema: ZodSchema<DisciplinaFormValues>` e `type DisciplinaFormValues = { nome: string; cargaHoraria: number; professorId: number; alunosIds: number[] }`. Estruturalmente igual a `DisciplinaInput` (`@/types/disciplina`). Usado por `DisciplinaFormFields` (Task 5) e `DisciplinaFormModal` (Task 7).
 
 - [ ] **Step 1: Criar `src/features/disciplinas/disciplinaSchema.ts`**
@@ -285,14 +259,8 @@ import { z } from "zod";
 
 export const disciplinaSchema = z.object({
   nome: z.string().trim().min(1, "Informe o nome."),
-  cargaHoraria: z.coerce
-    .number({ invalid_type_error: "Informe a carga horária." })
-    .int("A carga horária deve ser um número inteiro.")
-    .positive("A carga horária deve ser maior que zero."),
-  professorId: z.coerce
-    .number({ invalid_type_error: "Selecione um professor." })
-    .int()
-    .positive("Selecione um professor."),
+  cargaHoraria: z.coerce.number({ invalid_type_error: "Informe a carga horária." }).int("A carga horária deve ser um número inteiro.").positive("A carga horária deve ser maior que zero."),
+  professorId: z.coerce.number({ invalid_type_error: "Selecione um professor." }).int().positive("Selecione um professor."),
   alunosIds: z.array(z.number()).min(1, "Selecione ao menos um aluno."),
 });
 
@@ -321,9 +289,11 @@ git commit -m "feat: adiciona schema de validacao disciplinaSchema"
 **Antes de implementar:** invocar a skill `frontend-design` (formulário com select e multi-select).
 
 **Files:**
+
 - Create: `src/features/disciplinas/DisciplinaFormFields.tsx`
 
 **Interfaces:**
+
 - Consumes: `Form, FormControl, FormField, FormItem, FormLabel, FormMessage` (`@/components/ui/form`), `Input` (`@/components/ui/input`), `Select, SelectContent, SelectItem, SelectTrigger, SelectValue` (`@/components/ui/select`), `MultiSelect` (`@/components/ui/multi-select`, Task 2), `UseFormReturn<DisciplinaFormValues>` (`react-hook-form`), `DisciplinaFormValues` (Task 4), `Professor` (`@/types/professor`), `Aluno` (`@/types/aluno`)
 - Produces: `DisciplinaFormFields({ form, professores, alunos }: { form: UseFormReturn<DisciplinaFormValues>; professores: Professor[]; alunos: Aluno[] })`. Usado dentro do `FormModal` em `DisciplinaFormModal` (Task 7).
 
@@ -333,22 +303,9 @@ git commit -m "feat: adiciona schema de validacao disciplinaSchema"
 
 ```tsx
 import type { UseFormReturn } from "react-hook-form";
-import {
-  Form,
-  FormControl,
-  FormField,
-  FormItem,
-  FormLabel,
-  FormMessage,
-} from "@/components/ui/form";
+import { Form, FormControl, FormField, FormItem, FormLabel, FormMessage } from "@/components/ui/form";
 import { Input } from "@/components/ui/input";
-import {
-  Select,
-  SelectContent,
-  SelectItem,
-  SelectTrigger,
-  SelectValue,
-} from "@/components/ui/select";
+import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select";
 import { MultiSelect } from "@/components/ui/multi-select";
 import type { Professor } from "@/types/professor";
 import type { Aluno } from "@/types/aluno";
@@ -384,13 +341,7 @@ export function DisciplinaFormFields({ form, professores, alunos }: DisciplinaFo
             <FormItem>
               <FormLabel>Carga horária (horas)</FormLabel>
               <FormControl>
-                <Input
-                  type="number"
-                  min={1}
-                  placeholder="60"
-                  value={Number.isNaN(field.value) ? "" : field.value}
-                  onChange={(event) => field.onChange(event.target.valueAsNumber)}
-                />
+                <Input type="number" min={1} placeholder="60" value={Number.isNaN(field.value) ? "" : field.value} onChange={(event) => field.onChange(event.target.valueAsNumber)} />
               </FormControl>
               <FormMessage />
             </FormItem>
@@ -402,10 +353,7 @@ export function DisciplinaFormFields({ form, professores, alunos }: DisciplinaFo
           render={({ field }) => (
             <FormItem>
               <FormLabel>Professor responsável</FormLabel>
-              <Select
-                value={Number.isNaN(field.value) ? undefined : String(field.value)}
-                onValueChange={(value) => field.onChange(Number(value))}
-              >
+              <Select value={Number.isNaN(field.value) ? undefined : String(field.value)} onValueChange={(value) => field.onChange(Number(value))}>
                 <FormControl>
                   <SelectTrigger>
                     <SelectValue placeholder="Selecione o professor" />
@@ -430,12 +378,7 @@ export function DisciplinaFormFields({ form, professores, alunos }: DisciplinaFo
             <FormItem>
               <FormLabel>Alunos matriculados</FormLabel>
               <FormControl>
-                <MultiSelect
-                  options={alunos.map((aluno) => ({ value: aluno.id, label: aluno.nome }))}
-                  selected={field.value}
-                  onChange={field.onChange}
-                  placeholder="Selecione os alunos"
-                />
+                <MultiSelect options={alunos.map((aluno) => ({ value: aluno.id, label: aluno.nome }))} selected={field.value} onChange={field.onChange} placeholder="Selecione os alunos" />
               </FormControl>
               <FormMessage />
             </FormItem>
@@ -469,9 +412,11 @@ git commit -m "feat: adiciona DisciplinaFormFields com select e multi-select"
 **Antes de implementar:** invocar a skill `frontend-design` (tela completa de listagem).
 
 **Files:**
+
 - Create: `src/features/disciplinas/DisciplinasPage.tsx`
 
 **Interfaces:**
+
 - Consumes: `useDisciplinas` (Task 3), `useProfessores` (`@/features/professores/useProfessores`), `useAlunos` (`@/features/alunos/useAlunos`), `PageContainer`, `PageHeader`, `SectionCard`, `DataTable`, `DataTableColumn`, `SearchInput`, `LoadingState`, `ErrorState`, `EmptyState` (`@/components/shared/*`), `Button`, `Select*`, `Disciplina` (`@/types/disciplina`)
 - Produces: `DisciplinasPage()` — default export usado em `src/App.tsx` (Task 9) na rota `/disciplinas`.
 
@@ -491,13 +436,7 @@ import { LoadingState } from "@/components/shared/LoadingState";
 import { ErrorState } from "@/components/shared/ErrorState";
 import { EmptyState } from "@/components/shared/EmptyState";
 import { Button } from "@/components/ui/button";
-import {
-  Select,
-  SelectContent,
-  SelectItem,
-  SelectTrigger,
-  SelectValue,
-} from "@/components/ui/select";
+import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select";
 import { getApiErrorMessage } from "@/api/client";
 import type { Disciplina } from "@/types/disciplina";
 import { useDisciplinas } from "./useDisciplinas";
@@ -522,23 +461,18 @@ export default function DisciplinasPage() {
   const professores = professoresQuery.data ?? [];
   const disciplinas = disciplinasQuery.data ?? [];
 
-  const professoresPorId = useMemo(
-    () => new Map(professores.map((professor) => [professor.id, professor])),
-    [professores],
-  );
+  const professoresPorId = useMemo(() => new Map(professores.map((professor) => [professor.id, professor])), [professores]);
 
   const filteredDisciplinas = useMemo(() => {
     const term = search.trim().toLowerCase();
     return disciplinas.filter((disciplina) => {
       const matchesSearch = term.length === 0 || disciplina.nome.toLowerCase().includes(term);
-      const matchesProfessor =
-        professorFilter === "todos" || disciplina.professorId === Number(professorFilter);
+      const matchesProfessor = professorFilter === "todos" || disciplina.professorId === Number(professorFilter);
       return matchesSearch && matchesProfessor;
     });
   }, [disciplinas, search, professorFilter]);
 
-  const isLoading =
-    disciplinasQuery.isLoading || professoresQuery.isLoading || alunosQuery.isLoading;
+  const isLoading = disciplinasQuery.isLoading || professoresQuery.isLoading || alunosQuery.isLoading;
   const isError = disciplinasQuery.isError || professoresQuery.isError || alunosQuery.isError;
   const firstError = disciplinasQuery.error ?? professoresQuery.error ?? alunosQuery.error;
 
@@ -565,20 +499,10 @@ export default function DisciplinasPage() {
       className: "text-right",
       render: (disciplina) => (
         <div className="flex justify-end gap-2">
-          <Button
-            variant="ghost"
-            size="icon"
-            aria-label={`Editar ${disciplina.nome}`}
-            onClick={() => setFormState({ open: true, disciplina })}
-          >
+          <Button variant="ghost" size="icon" aria-label={`Editar ${disciplina.nome}`} onClick={() => setFormState({ open: true, disciplina })}>
             <Pencil className="h-4 w-4" />
           </Button>
-          <Button
-            variant="ghost"
-            size="icon"
-            aria-label={`Excluir ${disciplina.nome}`}
-            onClick={() => setDeleteTarget(disciplina)}
-          >
+          <Button variant="ghost" size="icon" aria-label={`Excluir ${disciplina.nome}`} onClick={() => setDeleteTarget(disciplina)}>
             <Trash2 className="h-4 w-4" />
           </Button>
         </div>
@@ -632,45 +556,21 @@ export default function DisciplinasPage() {
 
         {!isLoading && !isError && filteredDisciplinas.length === 0 ? (
           <EmptyState
-            title={
-              disciplinas.length > 0
-                ? "Nenhuma disciplina encontrada para os filtros atuais."
-                : "Nenhuma disciplina cadastrada ainda."
-            }
-            description={
-              disciplinas.length > 0
-                ? "Ajuste a busca ou o filtro de professor."
-                : "Comece cadastrando a primeira disciplina."
-            }
+            title={disciplinas.length > 0 ? "Nenhuma disciplina encontrada para os filtros atuais." : "Nenhuma disciplina cadastrada ainda."}
+            description={disciplinas.length > 0 ? "Ajuste a busca ou o filtro de professor." : "Comece cadastrando a primeira disciplina."}
             actionLabel={disciplinas.length > 0 ? undefined : "Nova disciplina"}
-            onAction={
-              disciplinas.length > 0
-                ? undefined
-                : () => setFormState({ open: true, disciplina: null })
-            }
+            onAction={disciplinas.length > 0 ? undefined : () => setFormState({ open: true, disciplina: null })}
           />
         ) : null}
 
         {!isLoading && !isError && filteredDisciplinas.length > 0 ? (
-          <DataTable
-            key={`${search}-${professorFilter}`}
-            data={filteredDisciplinas}
-            columns={columns}
-            getRowId={(disciplina) => disciplina.id}
-          />
+          <DataTable key={`${search}-${professorFilter}`} data={filteredDisciplinas} columns={columns} getRowId={(disciplina) => disciplina.id} />
         ) : null}
       </SectionCard>
 
-      <DisciplinaFormModal
-        open={formState.open}
-        disciplina={formState.disciplina}
-        onOpenChange={(open) => setFormState((current) => ({ ...current, open }))}
-      />
+      <DisciplinaFormModal open={formState.open} disciplina={formState.disciplina} onOpenChange={(open) => setFormState((current) => ({ ...current, open }))} />
 
-      <DisciplinaDeleteDialog
-        disciplina={deleteTarget}
-        onOpenChange={(open) => !open && setDeleteTarget(null)}
-      />
+      <DisciplinaDeleteDialog disciplina={deleteTarget} onOpenChange={(open) => !open && setDeleteTarget(null)} />
     </PageContainer>
   );
 }
@@ -689,9 +589,11 @@ Esperado: **falha** nesta etapa (`DisciplinaFormModal` e `DisciplinaDeleteDialog
 ### Task 7: `DisciplinaFormModal` — criação/edição via `FormModal`
 
 **Files:**
+
 - Create: `src/features/disciplinas/DisciplinaFormModal.tsx`
 
 **Interfaces:**
+
 - Consumes: `FormModal` (`@/components/shared/FormModal`), `LoadingState` (`@/components/shared/LoadingState`), `DisciplinaFormFields` (Task 5), `disciplinaSchema`, `DisciplinaFormValues` (Task 4), `useCreateDisciplina`, `useUpdateDisciplina` (Task 3), `useProfessores` (`@/features/professores/useProfessores`), `useAlunos` (`@/features/alunos/useAlunos`), `Disciplina` (`@/types/disciplina`), `zodResolver`, `useForm`
 - Produces: `DisciplinaFormModal({ open, disciplina, onOpenChange }: { open: boolean; disciplina: Disciplina | null; onOpenChange: (open: boolean) => void })`. Consumido por `DisciplinasPage` (Task 6).
 
@@ -753,10 +655,7 @@ export function DisciplinaFormModal({ open, disciplina, onOpenChange }: Discipli
 
   function handleValid(values: DisciplinaFormValues) {
     if (isEditing) {
-      updateDisciplina.mutate(
-        { id: disciplina.id, input: values },
-        { onSuccess: () => onOpenChange(false) },
-      );
+      updateDisciplina.mutate({ id: disciplina.id, input: values }, { onSuccess: () => onOpenChange(false) });
     } else {
       createDisciplina.mutate(values, { onSuccess: () => onOpenChange(false) });
     }
@@ -767,22 +666,12 @@ export function DisciplinaFormModal({ open, disciplina, onOpenChange }: Discipli
       open={open}
       onOpenChange={onOpenChange}
       title={isEditing ? "Editar disciplina" : "Nova disciplina"}
-      description={
-        isEditing ? "Atualize os dados da disciplina." : "Preencha os dados da nova disciplina."
-      }
+      description={isEditing ? "Atualize os dados da disciplina." : "Preencha os dados da nova disciplina."}
       onSubmit={form.handleSubmit(handleValid)}
       isSubmitting={isSubmitting || isLoadingOptions}
       submitLabel={isEditing ? "Salvar alterações" : "Criar disciplina"}
     >
-      {isLoadingOptions ? (
-        <LoadingState label="Carregando professores e alunos..." />
-      ) : (
-        <DisciplinaFormFields
-          form={form}
-          professores={professoresQuery.data ?? []}
-          alunos={alunosQuery.data ?? []}
-        />
-      )}
+      {isLoadingOptions ? <LoadingState label="Carregando professores e alunos..." /> : <DisciplinaFormFields form={form} professores={professoresQuery.data ?? []} alunos={alunosQuery.data ?? []} />}
     </FormModal>
   );
 }
@@ -801,9 +690,11 @@ Esperado: **ainda falha** (`DisciplinaDeleteDialog` da Task 8 falta) — esperad
 ### Task 8: `DisciplinaDeleteDialog` — exclusão via `ConfirmDialog`
 
 **Files:**
+
 - Create: `src/features/disciplinas/DisciplinaDeleteDialog.tsx`
 
 **Interfaces:**
+
 - Consumes: `ConfirmDialog` (`@/components/shared/ConfirmDialog`), `useDeleteDisciplina` (Task 3), `Disciplina` (`@/types/disciplina`)
 - Produces: `DisciplinaDeleteDialog({ disciplina, onOpenChange }: { disciplina: Disciplina | null; onOpenChange: (open: boolean) => void })`. Consumido por `DisciplinasPage` (Task 6).
 
@@ -827,11 +718,7 @@ export function DisciplinaDeleteDialog({ disciplina, onOpenChange }: DisciplinaD
       open={disciplina !== null}
       onOpenChange={onOpenChange}
       title="Excluir disciplina"
-      description={
-        disciplina
-          ? `Tem certeza que deseja excluir "${disciplina.nome}"? Esta ação não pode ser desfeita.`
-          : ""
-      }
+      description={disciplina ? `Tem certeza que deseja excluir "${disciplina.nome}"? Esta ação não pode ser desfeita.` : ""}
       isConfirming={deleteDisciplina.isPending}
       onConfirm={() => {
         if (!disciplina) return;
@@ -862,9 +749,11 @@ git commit -m "feat: adiciona DisciplinasPage com formulario e exclusao de disci
 ### Task 9: Conectar `/disciplinas` em `App.tsx`
 
 **Files:**
+
 - Modify: `src/App.tsx`
 
 **Interfaces:**
+
 - Consumes: `DisciplinasPage` (`@/features/disciplinas/DisciplinasPage`, Task 6, default export)
 
 - [ ] **Step 1: Adicionar o import de `DisciplinasPage` em `src/App.tsx`**
@@ -897,13 +786,14 @@ Esperado: build conclui sem erros.
 
 - [ ] **Step 4: Verificar manualmente com a API rodando**
 
-Requer uma API real respondendo em `VITE_API_URL`, implementando `GET/POST/PUT/DELETE /disciplinas`, `GET /professores` e `GET /alunos` conforme `api-contract/openapi.yaml`. Idealmente já existem alguns professores e alunos cadastrados (via as telas dos planos anteriores) antes de testar esta tela.
+Requer uma API real respondendo em `VITE_API_URL`, implementando `GET/POST/PUT/DELETE /disciplinas`, `GET /professores` e `GET /alunos` conforme `contract/openapi.yaml`. Idealmente já existem alguns professores e alunos cadastrados (via as telas dos planos anteriores) antes de testar esta tela.
 
 ```bash
 npm run dev
 ```
 
 Abrir `http://localhost:5173/disciplinas` e, com a API disponível, confirmar:
+
 - Lista de disciplinas aparece com nome, carga horária, **nome do professor** (não o ID) e número de alunos matriculados.
 - Buscar por nome filtra a tabela; filtrar por professor responsável também.
 - "Nova disciplina" abre o modal: o select de professor lista os professores cadastrados; o multi-select de alunos permite marcar/desmarcar múltiplos alunos (os selecionados aparecem como badges removíveis); submeter sem selecionar nenhum aluno mostra o erro de validação "Selecione ao menos um aluno." sem chamar a API.

@@ -2,7 +2,7 @@
 
 > **For agentic workers:** REQUIRED SUB-SKILL: Use superpowers:subagent-driven-development (recommended) or superpowers:executing-plans to implement this plan task-by-task. Steps use checkbox (`- [ ]`) syntax for tracking.
 
-**Goal:** Empacotar o frontend em uma imagem Docker (multi-stage: build Vite → nginx servindo estático com fallback de SPA) e documentar, no `README.md` raiz e em `api-contract/README.md`, tudo que um aluno precisa para rodar o frontend apontando para a própria API.
+**Goal:** Empacotar o frontend em uma imagem Docker (multi-stage: build Vite → nginx servindo estático com fallback de SPA) e documentar, no `README.md` raiz e em `contract/README.md`, tudo que um aluno precisa para rodar o frontend apontando para a própria API.
 
 **Architecture:** Stage 1 builda a aplicação Vite recebendo `VITE_API_URL` como build-arg (variáveis Vite são embutidas no bundle em build-time, não em runtime). Stage 2 copia o output estático (`dist/`) para uma imagem `nginx:alpine`, com `nginx.conf` fazendo fallback de todas as rotas para `index.html` (necessário para o React Router funcionar em refresh/deep-link).
 
@@ -25,9 +25,11 @@ Este plano assume que o plano de Fundação já foi executado (o projeto builda 
 ### Task 1: `Dockerfile` multi-stage + `nginx.conf` + `.dockerignore`
 
 **Files:**
+
 - Create: `Dockerfile`, `nginx.conf`, `.dockerignore`
 
 **Interfaces:**
+
 - Produces: imagem Docker que serve a aplicação buildada na porta 80 (mapeável para qualquer porta do host), com fallback de SPA para todas as rotas do React Router (`/`, `/alunos`, `/professores`, `/disciplinas`).
 
 - [ ] **Step 1: Criar `.dockerignore`**
@@ -91,6 +93,7 @@ docker run --rm -p 8080:80 frontend-challenge
 ```
 
 Abrir `http://localhost:8080/` no navegador e confirmar:
+
 - A Dashboard carrega (mesmo que mostre `ErrorState`, caso nenhuma API esteja acessível em `http://localhost:3000` a partir do navegador — o importante é que a aplicação estática carregou e está rodando via nginx).
 - Navegar diretamente para `http://localhost:8080/alunos` (deep-link, sem clicar na sidebar) carrega a tela corretamente em vez de retornar 404 do nginx — confirma que o fallback de SPA em `nginx.conf` está funcionando.
 
@@ -108,21 +111,23 @@ git commit -m "chore: adiciona Dockerfile multi-stage e nginx.conf com fallback 
 ### Task 2: `README.md` raiz
 
 **Files:**
+
 - Create: `README.md`
 
 **Interfaces:**
-- Consumes (referencia, não importa em código): `.env.example` (plano de Fundação), `api-contract/openapi.yaml` e `api-contract/README.md` (Task 3), `Dockerfile` (Task 1)
+
+- Consumes (referencia, não importa em código): `.env.example` (plano de Fundação), `contract/openapi.yaml` e `contract/README.md` (Task 3), `Dockerfile` (Task 1)
 
 - [ ] **Step 1: Criar `README.md`**
 
-```markdown
+````markdown
 # Frontend Challenge
 
-Frontend completo de um mini-SaaS administrativo, disponibilizado como desafio para você implementar o backend (API REST + banco de dados). Este repositório **não contém nenhum backend nem dado mockado** — toda informação exibida na tela vem da API que você vai construir, seguindo o contrato documentado em [`api-contract/`](./api-contract).
+Frontend completo de um mini-SaaS administrativo, disponibilizado como desafio para você implementar o backend (API REST + banco de dados). Este repositório **não contém nenhum backend nem dado mockado** — toda informação exibida na tela vem da API que você vai construir, seguindo o contrato documentado em [`contract/`](./contract).
 
 ## O desafio
 
-Implemente uma API REST (na linguagem/framework de sua escolha) que sirva o CRUD de três entidades — **Alunos**, **Professores** e **Disciplinas** — seguindo exatamente o contrato descrito em [`api-contract/openapi.yaml`](./api-contract/openapi.yaml). Depois de rodar sua API, aponte este frontend para ela (via `VITE_API_URL`) e todas as telas passam a funcionar com dados reais.
+Implemente uma API REST (na linguagem/framework de sua escolha) que sirva o CRUD de três entidades — **Alunos**, **Professores** e **Disciplinas** — seguindo exatamente o contrato descrito em [`contract/openapi.yaml`](./contract/openapi.yaml). Depois de rodar sua API, aponte este frontend para ela (via `VITE_API_URL`) e todas as telas passam a funcionar com dados reais.
 
 ## Stack do frontend
 
@@ -138,13 +143,14 @@ cp .env.example .env
 # edite .env se sua API não estiver em http://localhost:3000
 npm run dev
 ```
+````
 
 Acesse `http://localhost:5173`.
 
 ## Variáveis de ambiente
 
-| Variável | Descrição | Padrão |
-|---|---|---|
+| Variável       | Descrição                                        | Padrão                  |
+| -------------- | ------------------------------------------------ | ----------------------- |
 | `VITE_API_URL` | URL base da API REST que o frontend vai consumir | `http://localhost:3000` |
 
 `VITE_API_URL` é embutida no bundle em **build-time** (comportamento padrão do Vite) — ao buildar a imagem Docker, ela precisa ser passada como build-arg (veja abaixo), não como variável de ambiente do container em runtime.
@@ -181,7 +187,7 @@ DELETE /disciplinas/:id   -> (204)
 
 Qualquer erro (400/404/409/500) deve retornar corpo `{ "message": string }` — o frontend exibe essa mensagem diretamente (via toast em mutations, via tela de erro em falhas de listagem).
 
-A especificação completa (schemas, exemplos, códigos de status) está em [`api-contract/openapi.yaml`](./api-contract/openapi.yaml). Para consultar interativamente via Swagger UI, veja [`api-contract/README.md`](./api-contract/README.md).
+A especificação completa (schemas, exemplos, códigos de status) está em [`contract/openapi.yaml`](./contract/openapi.yaml). Para consultar interativamente via Swagger UI, veja [`contract/README.md`](./contract/README.md).
 
 ## Modelo de dados
 
@@ -194,32 +200,35 @@ A especificação completa (schemas, exemplos, códigos de status) está em [`ap
 ## Fora de escopo
 
 Autenticação/login, busca ou paginação no servidor, suíte de testes automatizados, suporte mobile.
-```
+
+````
 
 - [ ] **Step 2: Verificar**
 
-Conferir manualmente que todos os links relativos do arquivo (`./api-contract`, `./api-contract/openapi.yaml`, `./api-contract/README.md`) apontam para caminhos que existem no repositório (os dois últimos são criados pelo plano de Fundação e pela Task 3 deste plano, respectivamente).
+Conferir manualmente que todos os links relativos do arquivo (`./contract`, `./contract/openapi.yaml`, `./contract/README.md`) apontam para caminhos que existem no repositório (os dois últimos são criados pelo plano de Fundação e pela Task 3 deste plano, respectivamente).
 
 - [ ] **Step 3: Commit**
 
 ```bash
 git add -A
 git commit -m "docs: adiciona README raiz com setup, docker e resumo do contrato"
-```
+````
 
 ---
 
-### Task 3: `api-contract/README.md`
+### Task 3: `contract/README.md`
 
 **Files:**
-- Create: `api-contract/README.md`
+
+- Create: `contract/README.md`
 
 **Interfaces:**
-- Consumes (referencia, não importa em código): `api-contract/openapi.yaml`, `api-contract/index.html` (ambos do plano de Fundação)
 
-- [ ] **Step 1: Criar `api-contract/README.md`**
+- Consumes (referencia, não importa em código): `contract/openapi.yaml`, `contract/index.html` (ambos do plano de Fundação)
 
-```markdown
+- [ ] **Step 1: Criar `contract/README.md`**
+
+````markdown
 # Contrato de API
 
 Este diretório contém a especificação formal da API que você deve implementar para o desafio.
@@ -234,19 +243,21 @@ Abrir `index.html` diretamente como arquivo (`file://`) pode falhar ao carregar 
 ```bash
 npx serve api-contract -l 4000
 ```
+````
 
 Depois abra `http://localhost:4000` no navegador.
 
 ## Como consumir
 
 Qualquer ferramenta que leia OpenAPI 3.0 funciona com `openapi.yaml` — por exemplo, para gerar código cliente, importar em Postman/Insomnia, ou validar sua implementação de backend contra o contrato.
-```
+
+````
 
 - [ ] **Step 2: Verificar**
 
 ```bash
 npx serve api-contract -l 4000
-```
+````
 
 Abrir `http://localhost:4000` e confirmar que o Swagger UI (`index.html`, já existente do plano de Fundação) continua carregando normalmente — este README não altera o comportamento do `index.html`, apenas o documenta.
 
@@ -254,13 +265,13 @@ Abrir `http://localhost:4000` e confirmar que o Swagger UI (`index.html`, já ex
 
 ```bash
 git add -A
-git commit -m "docs: adiciona api-contract/README.md explicando como consultar o contrato"
+git commit -m "docs: adiciona contract/README.md explicando como consultar o contrato"
 ```
 
 ---
 
 ## Self-Review desta plan
 
-- **Cobertura do spec**: `Dockerfile` multi-stage (`node:alpine` build → `nginx:alpine` runtime) recebendo `VITE_API_URL` como build-arg ✅ (Task 1), `nginx.conf` com fallback de SPA ✅ (Task 1), `README.md` raiz cobrindo overview, stack, setup local, env vars, build/run via Docker e resumo do contrato com link para `api-contract/` ✅ (Task 2), `api-contract/README.md` explicando como abrir o Swagger UI estático ✅ (Task 3).
+- **Cobertura do spec**: `Dockerfile` multi-stage (`node:alpine` build → `nginx:alpine` runtime) recebendo `VITE_API_URL` como build-arg ✅ (Task 1), `nginx.conf` com fallback de SPA ✅ (Task 1), `README.md` raiz cobrindo overview, stack, setup local, env vars, build/run via Docker e resumo do contrato com link para `contract/` ✅ (Task 2), `contract/README.md` explicando como abrir o Swagger UI estático ✅ (Task 3).
 - **Placeholders**: nenhum — `Dockerfile`, `nginx.conf` e ambos os READMEs têm conteúdo completo.
-- **Consistência**: o resumo do contrato de API no `README.md` raiz (Task 2) reflete exatamente as mesmas rotas e formato de erro definidos em `api-contract/openapi.yaml` (plano de Fundação, Task 16) — nenhum endpoint, campo ou comportamento inventado fora do contrato.
+- **Consistência**: o resumo do contrato de API no `README.md` raiz (Task 2) reflete exatamente as mesmas rotas e formato de erro definidos em `contract/openapi.yaml` (plano de Fundação, Task 16) — nenhum endpoint, campo ou comportamento inventado fora do contrato.

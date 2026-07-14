@@ -31,9 +31,11 @@ Este plano assume que o plano de Fundação já foi executado (tipos, `createEnt
 ### Task 1: Garantir componentes shadcn de formulário instalados
 
 **Files:**
+
 - Create (se ainda não existirem): `src/components/ui/select.tsx`, `src/components/ui/form.tsx`, `src/components/ui/label.tsx`
 
 **Interfaces:**
+
 - Produces: `Select, SelectContent, SelectItem, SelectTrigger, SelectValue` (`@/components/ui/select`); `Form, FormControl, FormField, FormItem, FormLabel, FormMessage` (`@/components/ui/form`); `Label` (`@/components/ui/label`). Usados por `ProfessorFormFields` (Task 4).
 
 - [ ] **Step 1: Verificar se já existem (instalados pelo plano de CRUD Alunos)**
@@ -70,9 +72,11 @@ git commit -m "chore: adiciona componentes shadcn select, form e label"
 ### Task 2: Hook `useProfessores` (via `entityFactory`)
 
 **Files:**
+
 - Create: `src/features/professores/useProfessores.ts`
 
 **Interfaces:**
+
 - Consumes: `createEntityHooks` (`@/api/entityFactory`), `Professor`, `ProfessorInput` (`@/types/professor`)
 - Produces: `useProfessores(): UseQueryResult<Professor[]>`, `useCreateProfessor(): UseMutationResult<Professor, unknown, ProfessorInput>`, `useUpdateProfessor(): UseMutationResult<Professor, unknown, { id: number; input: ProfessorInput }>`, `useDeleteProfessor(): UseMutationResult<void, unknown, number>`. Usados por `ProfessoresPage` (Task 5) e, no plano de CRUD Disciplinas, por `useProfessores` para alimentar o select de professor.
 
@@ -110,9 +114,11 @@ git commit -m "feat: adiciona hooks useProfessores via entityFactory"
 ### Task 3: Schema de validação `professorSchema` (Zod)
 
 **Files:**
+
 - Create: `src/features/professores/professorSchema.ts`
 
 **Interfaces:**
+
 - Produces: `professorSchema: ZodSchema<ProfessorFormValues>` e `type ProfessorFormValues = { nome: string; email: string; especialidade: string; status: "ativo" | "inativo" }`. `ProfessorFormValues` é estruturalmente igual a `ProfessorInput` (`@/types/professor`) e é usado por `ProfessorFormFields` (Task 4) e `ProfessoresPage` (Task 5).
 
 - [ ] **Step 1: Criar `src/features/professores/professorSchema.ts`**
@@ -152,9 +158,11 @@ git commit -m "feat: adiciona schema de validacao professorSchema"
 **Antes de implementar:** invocar a skill `frontend-design` (formulário de entidade).
 
 **Files:**
+
 - Create: `src/features/professores/ProfessorFormFields.tsx`
 
 **Interfaces:**
+
 - Consumes: `Form, FormControl, FormField, FormItem, FormLabel, FormMessage` (`@/components/ui/form`), `Input` (`@/components/ui/input`), `Select, SelectContent, SelectItem, SelectTrigger, SelectValue` (`@/components/ui/select`), `UseFormReturn<ProfessorFormValues>` (`react-hook-form`), `ProfessorFormValues` (`@/features/professores/professorSchema`, Task 3)
 - Produces: `ProfessorFormFields({ form }: { form: UseFormReturn<ProfessorFormValues> })` — renderiza os campos `nome`, `email`, `especialidade`, `status`. Usado dentro do `FormModal` em `ProfessoresPage` (Task 5).
 
@@ -164,22 +172,9 @@ git commit -m "feat: adiciona schema de validacao professorSchema"
 
 ```tsx
 import type { UseFormReturn } from "react-hook-form";
-import {
-  Form,
-  FormControl,
-  FormField,
-  FormItem,
-  FormLabel,
-  FormMessage,
-} from "@/components/ui/form";
+import { Form, FormControl, FormField, FormItem, FormLabel, FormMessage } from "@/components/ui/form";
 import { Input } from "@/components/ui/input";
-import {
-  Select,
-  SelectContent,
-  SelectItem,
-  SelectTrigger,
-  SelectValue,
-} from "@/components/ui/select";
+import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select";
 import type { ProfessorFormValues } from "./professorSchema";
 
 interface ProfessorFormFieldsProps {
@@ -278,9 +273,11 @@ git commit -m "feat: adiciona ProfessorFormFields"
 **Antes de implementar:** invocar a skill `frontend-design` (tela completa de listagem).
 
 **Files:**
+
 - Create: `src/features/professores/ProfessoresPage.tsx`
 
 **Interfaces:**
+
 - Consumes: `useProfessores` (Task 2), `PageContainer`, `PageHeader`, `SectionCard`, `DataTable`, `DataTableColumn`, `SearchInput`, `StatusBadge`, `LoadingState`, `ErrorState`, `EmptyState` (`@/components/shared/*`, Fundação), `Button` (`@/components/ui/button`), `Select*` (`@/components/ui/select`), `Professor` (`@/types/professor`)
 - Produces: `ProfessoresPage()` — componente de página completo, default export usado em `src/App.tsx` (Task 7) na rota `/professores`.
 
@@ -301,13 +298,7 @@ import { LoadingState } from "@/components/shared/LoadingState";
 import { ErrorState } from "@/components/shared/ErrorState";
 import { EmptyState } from "@/components/shared/EmptyState";
 import { Button } from "@/components/ui/button";
-import {
-  Select,
-  SelectContent,
-  SelectItem,
-  SelectTrigger,
-  SelectValue,
-} from "@/components/ui/select";
+import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select";
 import { getApiErrorMessage } from "@/api/client";
 import type { Professor } from "@/types/professor";
 import { useProfessores } from "./useProfessores";
@@ -331,11 +322,7 @@ export default function ProfessoresPage() {
     if (!professores) return [];
     const term = search.trim().toLowerCase();
     return professores.filter((professor) => {
-      const matchesSearch =
-        term.length === 0 ||
-        professor.nome.toLowerCase().includes(term) ||
-        professor.email.toLowerCase().includes(term) ||
-        professor.especialidade.toLowerCase().includes(term);
+      const matchesSearch = term.length === 0 || professor.nome.toLowerCase().includes(term) || professor.email.toLowerCase().includes(term) || professor.especialidade.toLowerCase().includes(term);
       const matchesStatus = statusFilter === "todos" || professor.status === statusFilter;
       return matchesSearch && matchesStatus;
     });
@@ -360,20 +347,10 @@ export default function ProfessoresPage() {
       className: "text-right",
       render: (professor) => (
         <div className="flex justify-end gap-2">
-          <Button
-            variant="ghost"
-            size="icon"
-            aria-label={`Editar ${professor.nome}`}
-            onClick={() => setFormState({ open: true, professor })}
-          >
+          <Button variant="ghost" size="icon" aria-label={`Editar ${professor.nome}`} onClick={() => setFormState({ open: true, professor })}>
             <Pencil className="h-4 w-4" />
           </Button>
-          <Button
-            variant="ghost"
-            size="icon"
-            aria-label={`Excluir ${professor.nome}`}
-            onClick={() => setDeleteTarget(professor)}
-          >
+          <Button variant="ghost" size="icon" aria-label={`Excluir ${professor.nome}`} onClick={() => setDeleteTarget(professor)}>
             <Trash2 className="h-4 w-4" />
           </Button>
         </div>
@@ -396,15 +373,8 @@ export default function ProfessoresPage() {
 
       <SectionCard>
         <div className="mb-4 flex flex-col gap-3 sm:flex-row sm:items-center">
-          <SearchInput
-            value={search}
-            onChange={setSearch}
-            placeholder="Buscar por nome, email ou especialidade..."
-          />
-          <Select
-            value={statusFilter}
-            onValueChange={(value) => setStatusFilter(value as StatusFilter)}
-          >
+          <SearchInput value={search} onChange={setSearch} placeholder="Buscar por nome, email ou especialidade..." />
+          <Select value={statusFilter} onValueChange={(value) => setStatusFilter(value as StatusFilter)}>
             <SelectTrigger className="sm:w-48">
               <SelectValue placeholder="Status" />
             </SelectTrigger>
@@ -418,51 +388,25 @@ export default function ProfessoresPage() {
 
         {isLoading ? <LoadingState label="Carregando professores..." /> : null}
 
-        {isError ? (
-          <ErrorState message={getApiErrorMessage(error)} onRetry={() => refetch()} />
-        ) : null}
+        {isError ? <ErrorState message={getApiErrorMessage(error)} onRetry={() => refetch()} /> : null}
 
         {!isLoading && !isError && filteredProfessores.length === 0 ? (
           <EmptyState
-            title={
-              professores && professores.length > 0
-                ? "Nenhum professor encontrado para os filtros atuais."
-                : "Nenhum professor cadastrado ainda."
-            }
-            description={
-              professores && professores.length > 0
-                ? "Ajuste a busca ou o filtro de status."
-                : "Comece cadastrando o primeiro professor."
-            }
+            title={professores && professores.length > 0 ? "Nenhum professor encontrado para os filtros atuais." : "Nenhum professor cadastrado ainda."}
+            description={professores && professores.length > 0 ? "Ajuste a busca ou o filtro de status." : "Comece cadastrando o primeiro professor."}
             actionLabel={professores && professores.length > 0 ? undefined : "Novo professor"}
-            onAction={
-              professores && professores.length > 0
-                ? undefined
-                : () => setFormState({ open: true, professor: null })
-            }
+            onAction={professores && professores.length > 0 ? undefined : () => setFormState({ open: true, professor: null })}
           />
         ) : null}
 
         {!isLoading && !isError && filteredProfessores.length > 0 ? (
-          <DataTable
-            key={`${search}-${statusFilter}`}
-            data={filteredProfessores}
-            columns={columns}
-            getRowId={(professor) => professor.id}
-          />
+          <DataTable key={`${search}-${statusFilter}`} data={filteredProfessores} columns={columns} getRowId={(professor) => professor.id} />
         ) : null}
       </SectionCard>
 
-      <ProfessorFormModal
-        open={formState.open}
-        professor={formState.professor}
-        onOpenChange={(open) => setFormState((current) => ({ ...current, open }))}
-      />
+      <ProfessorFormModal open={formState.open} professor={formState.professor} onOpenChange={(open) => setFormState((current) => ({ ...current, open }))} />
 
-      <ProfessorDeleteDialog
-        professor={deleteTarget}
-        onOpenChange={(open) => !open && setDeleteTarget(null)}
-      />
+      <ProfessorDeleteDialog professor={deleteTarget} onOpenChange={(open) => !open && setDeleteTarget(null)} />
     </PageContainer>
   );
 }
@@ -481,9 +425,11 @@ Esperado: **falha** nesta etapa (`ProfessorFormModal` e `ProfessorDeleteDialog` 
 ### Task 6: `ProfessorFormModal` — criação/edição via `FormModal`
 
 **Files:**
+
 - Create: `src/features/professores/ProfessorFormModal.tsx`
 
 **Interfaces:**
+
 - Consumes: `FormModal` (`@/components/shared/FormModal`, Fundação), `ProfessorFormFields` (Task 4), `professorSchema`, `ProfessorFormValues` (Task 3), `useCreateProfessor`, `useUpdateProfessor` (Task 2), `Professor` (`@/types/professor`), `zodResolver` (`@hookform/resolvers/zod`), `useForm` (`react-hook-form`)
 - Produces: `ProfessorFormModal({ open, professor, onOpenChange }: { open: boolean; professor: Professor | null; onOpenChange: (open: boolean) => void })`. Consumido por `ProfessoresPage` (Task 5).
 
@@ -539,10 +485,7 @@ export function ProfessorFormModal({ open, professor, onOpenChange }: ProfessorF
 
   function handleValid(values: ProfessorFormValues) {
     if (isEditing) {
-      updateProfessor.mutate(
-        { id: professor.id, input: values },
-        { onSuccess: () => onOpenChange(false) },
-      );
+      updateProfessor.mutate({ id: professor.id, input: values }, { onSuccess: () => onOpenChange(false) });
     } else {
       createProfessor.mutate(values, { onSuccess: () => onOpenChange(false) });
     }
@@ -553,9 +496,7 @@ export function ProfessorFormModal({ open, professor, onOpenChange }: ProfessorF
       open={open}
       onOpenChange={onOpenChange}
       title={isEditing ? "Editar professor" : "Novo professor"}
-      description={
-        isEditing ? "Atualize os dados do professor." : "Preencha os dados do novo professor."
-      }
+      description={isEditing ? "Atualize os dados do professor." : "Preencha os dados do novo professor."}
       onSubmit={form.handleSubmit(handleValid)}
       isSubmitting={isSubmitting}
       submitLabel={isEditing ? "Salvar alterações" : "Criar professor"}
@@ -579,9 +520,11 @@ Esperado: **ainda falha** (`ProfessorDeleteDialog` da Task 7 falta) — esperado
 ### Task 7: `ProfessorDeleteDialog` — exclusão via `ConfirmDialog`
 
 **Files:**
+
 - Create: `src/features/professores/ProfessorDeleteDialog.tsx`
 
 **Interfaces:**
+
 - Consumes: `ConfirmDialog` (`@/components/shared/ConfirmDialog`, Fundação), `useDeleteProfessor` (Task 2), `Professor` (`@/types/professor`)
 - Produces: `ProfessorDeleteDialog({ professor, onOpenChange }: { professor: Professor | null; onOpenChange: (open: boolean) => void })`. Consumido por `ProfessoresPage` (Task 5).
 
@@ -606,9 +549,7 @@ export function ProfessorDeleteDialog({ professor, onOpenChange }: ProfessorDele
       onOpenChange={onOpenChange}
       title="Excluir professor"
       description={
-        professor
-          ? `Tem certeza que deseja excluir "${professor.nome}"? Esta ação não pode ser desfeita. Se este professor estiver vinculado a alguma disciplina, a API pode recusar a exclusão.`
-          : ""
+        professor ? `Tem certeza que deseja excluir "${professor.nome}"? Esta ação não pode ser desfeita. Se este professor estiver vinculado a alguma disciplina, a API pode recusar a exclusão.` : ""
       }
       isConfirming={deleteProfessor.isPending}
       onConfirm={() => {
@@ -640,9 +581,11 @@ git commit -m "feat: adiciona ProfessoresPage com formulario e exclusao de profe
 ### Task 8: Conectar `/professores` em `App.tsx`
 
 **Files:**
+
 - Modify: `src/App.tsx`
 
 **Interfaces:**
+
 - Consumes: `ProfessoresPage` (`@/features/professores/ProfessoresPage`, Task 5, default export)
 
 - [ ] **Step 1: Adicionar o import de `ProfessoresPage` em `src/App.tsx`**
@@ -677,13 +620,14 @@ Esperado: build conclui sem erros.
 
 - [ ] **Step 4: Verificar manualmente com a API rodando**
 
-Requer uma API real respondendo em `VITE_API_URL`, implementando `GET/POST/PUT/DELETE /professores` conforme `api-contract/openapi.yaml`. Sem API no ar, a tela mostra `ErrorState` (comportamento válido — confirma ausência de dado mockado).
+Requer uma API real respondendo em `VITE_API_URL`, implementando `GET/POST/PUT/DELETE /professores` conforme `contract/openapi.yaml`. Sem API no ar, a tela mostra `ErrorState` (comportamento válido — confirma ausência de dado mockado).
 
 ```bash
 npm run dev
 ```
 
 Abrir `http://localhost:5173/professores` e, com a API disponível, confirmar:
+
 - Lista de professores da API aparece na tabela.
 - Busca por nome/email/especialidade filtra a tabela; filtro de status também.
 - "Novo professor" cria via `POST /professores` com toast de sucesso e atualização da lista.

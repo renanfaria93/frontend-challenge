@@ -1,0 +1,14 @@
+services:
+  web:
+    build:
+      context: ./frontend
+      args:
+        VITE_API_URL: ${VITE_API_URL:-http://localhost:3000}
+    ports:
+      - "8080:80"
+
+  api-contract:
+    build:
+      context: ./contract
+    ports:
+      - "4000:80"

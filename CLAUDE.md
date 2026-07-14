@@ -4,7 +4,7 @@ Orientações para trabalhar neste repositório. Contexto completo do projeto es
 
 ## Sobre o projeto
 
-Frontend de um desafio para alunos implementarem backend. **Não existe backend neste repositório.** Toda informação exibida vem exclusivamente de uma API REST externa, consumida via Axios + TanStack Query, seguindo o contrato em `api-contract/openapi.yaml`.
+Frontend de um desafio para alunos implementarem backend. **Não existe backend neste repositório.** Toda informação exibida vem exclusivamente de uma API REST externa, consumida via Axios + TanStack Query, seguindo o contrato em `contract/openapi.yaml`.
 
 ## Regra fundamental — sem dados falsos
 
@@ -18,14 +18,17 @@ React + Vite + TypeScript, React Router, Tailwind CSS, shadcn/ui, Lucide React, 
 
 ## Estrutura de pastas
 
+Monorepo com dois projetos independentes na raiz, orquestrados por um `docker-compose.yml`:
+
 ```
-src/api/            client axios + entityFactory (hooks CRUD genéricos)
-src/types/          tipos das 3 entidades (Aluno, Professor, Disciplina)
-src/features/<entidade>/   página + form fields + schema Zod + hooks específicos
-src/components/layout/     AppShell, Sidebar, Header
-src/components/shared/     componentes reutilizáveis (ver lista abaixo)
-src/components/ui/         componentes shadcn
-api-contract/               openapi.yaml + Swagger UI estático (fonte da verdade da API)
+frontend/                          projeto React (ver frontend/README.md)
+  src/api/                         client axios + entityFactory (hooks CRUD genéricos)
+  src/types/                       tipos das 3 entidades (Aluno, Professor, Disciplina)
+  src/features/<entidade>/         página + form fields + schema Zod + hooks específicos
+  src/components/layout/           AppShell, Sidebar, Header
+  src/components/shared/           componentes reutilizáveis (ver lista abaixo)
+  src/components/ui/               componentes shadcn
+contract/                          openapi.yaml + Swagger UI estático (fonte da verdade da API)
 ```
 
 ## Padrões de código obrigatórios
@@ -37,7 +40,7 @@ api-contract/               openapi.yaml + Swagger UI estático (fonte da verdad
 - **shadcn/ui primeiro**: sempre usar/instalar um componente pronto do shadcn antes de construir algo do zero (checar o registry, inclusive para casos como multi-select).
 - **Forms**: React Hook Form + Zod, um schema por entidade (`features/<entidade>/<entidade>Schema.ts`).
 - **Feedback**: toasts via `sonner` em toda mutation (sucesso e erro); botões desabilitados durante submissão.
-- **Tipagem**: forte, sem `any`. Tipos de entidade centralizados em `src/types/`.
+- **Tipagem**: forte, sem `any`. Tipos de entidade centralizados em `frontend/src/types/`.
 - **Domínio em português**: campos de entidade e labels de UI em português (`nome`, `matricula`, `cargaHoraria`, `professorId`, `alunosIds`), para bater com o domínio do desafio. Nomes técnicos (funções, hooks, componentes) em inglês, padrão do ecossistema React.
 - **Cores/tema**: base neutra + indigo como destaque (já configurado via shadcn).
 
@@ -47,7 +50,7 @@ Qualquer tarefa visual — criar uma tela nova, um componente de UI, ajustar lay
 
 ## Contrato de API
 
-`api-contract/openapi.yaml` é a fonte da verdade. Nunca inventar endpoint, campo ou comportamento fora dele. Erros da API sempre no formato `{ "message": string }`. Listagens retornam array direto (sem envelope), sem paginação/busca no servidor — filtros e paginação são client-side sobre os dados já carregados.
+`contract/openapi.yaml` é a fonte da verdade. Nunca inventar endpoint, campo ou comportamento fora dele. Erros da API sempre no formato `{ "message": string }`. Listagens retornam array direto (sem envelope), sem paginação/busca no servidor — filtros e paginação são client-side sobre os dados já carregados.
 
 ## O que não fazer
 

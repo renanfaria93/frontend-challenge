@@ -1,5 +1,6 @@
 import { Menu } from "lucide-react";
 import { Button } from "@/components/ui/button";
+import { Logo } from "@/components/layout/Logo";
 
 interface HeaderProps {
   onMenuClick: () => void;
@@ -11,7 +12,7 @@ export function Header({ onMenuClick }: HeaderProps) {
       <Button variant="ghost" size="icon" onClick={onMenuClick} aria-label="Abrir menu">
         <Menu className="h-5 w-5" />
       </Button>
-      <span className="text-base font-semibold">Admin</span>
+      <Logo subtitle={false} />
     </header>
   );
 }

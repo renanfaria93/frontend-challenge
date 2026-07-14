@@ -1,6 +1,7 @@
 import { NavLink } from "react-router-dom";
 import { BookOpen, GraduationCap, LayoutDashboard, Users } from "lucide-react";
 import { cn } from "@/lib/utils";
+import { Logo } from "@/components/layout/Logo";
 
 const NAV_ITEMS = [
   { to: "/", label: "Dashboard", icon: LayoutDashboard, end: true },
@@ -12,7 +13,9 @@ const NAV_ITEMS = [
 export function Sidebar() {
   return (
     <nav className="flex h-full w-60 flex-col gap-1 border-r bg-sidebar p-4">
-      <span className="mb-4 px-2 text-lg font-semibold text-sidebar-foreground">Admin</span>
+      <div className="mb-5 border-b border-sidebar-border px-2 pb-4">
+        <Logo />
+      </div>
       {NAV_ITEMS.map(({ to, label, icon: Icon, end }) => (
         <NavLink
           key={to}

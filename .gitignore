@@ -30,3 +30,6 @@ scaffold.js
 *.njsproj
 *.sln
 *.sw?
+
+# Local dev tooling (browser preview config, not part of the app deliverable)
+.claude/launch.json

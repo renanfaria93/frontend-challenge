@@ -1,0 +1,325 @@
+openapi: 3.0.3
+info:
+  title: Frontend Challenge API
+  description: >
+    Contrato de API que os alunos devem implementar para o desafio de backend.
+    Todas as respostas de erro seguem o formato { "message": string }.
+  version: "1.0.0"
+servers:
+  - url: http://localhost:3000
+    description: Servidor local de desenvolvimento
+tags:
+  - name: Alunos
+  - name: Professores
+  - name: Disciplinas
+paths:
+  /alunos:
+    get:
+      tags: [Alunos]
+      summary: Lista todos os alunos
+      responses:
+        "200":
+          description: Lista de alunos
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  $ref: "#/components/schemas/Aluno"
+    post:
+      tags: [Alunos]
+      summary: Cria um novo aluno
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: "#/components/schemas/AlunoInput"
+      responses:
+        "201":
+          description: Aluno criado
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/Aluno"
+        "400":
+          $ref: "#/components/responses/Error"
+  /alunos/{id}:
+    put:
+      tags: [Alunos]
+      summary: Atualiza um aluno existente
+      parameters:
+        - $ref: "#/components/parameters/Id"
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: "#/components/schemas/AlunoInput"
+      responses:
+        "200":
+          description: Aluno atualizado
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/Aluno"
+        "400":
+          $ref: "#/components/responses/Error"
+        "404":
+          $ref: "#/components/responses/Error"
+    delete:
+      tags: [Alunos]
+      summary: Remove um aluno
+      parameters:
+        - $ref: "#/components/parameters/Id"
+      responses:
+        "204":
+          description: Aluno removido
+        "404":
+          $ref: "#/components/responses/Error"
+        "409":
+          $ref: "#/components/responses/Error"
+  /professores:
+    get:
+      tags: [Professores]
+      summary: Lista todos os professores
+      responses:
+        "200":
+          description: Lista de professores
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  $ref: "#/components/schemas/Professor"
+    post:
+      tags: [Professores]
+      summary: Cria um novo professor
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: "#/components/schemas/ProfessorInput"
+      responses:
+        "201":
+          description: Professor criado
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/Professor"
+        "400":
+          $ref: "#/components/responses/Error"
+  /professores/{id}:
+    put:
+      tags: [Professores]
+      summary: Atualiza um professor existente
+      parameters:
+        - $ref: "#/components/parameters/Id"
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: "#/components/schemas/ProfessorInput"
+      responses:
+        "200":
+          description: Professor atualizado
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/Professor"
+        "400":
+          $ref: "#/components/responses/Error"
+        "404":
+          $ref: "#/components/responses/Error"
+    delete:
+      tags: [Professores]
+      summary: Remove um professor
+      parameters:
+        - $ref: "#/components/parameters/Id"
+      responses:
+        "204":
+          description: Professor removido
+        "404":
+          $ref: "#/components/responses/Error"
+        "409":
+          description: Professor referenciado em uma disciplina
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/ErrorBody"
+  /disciplinas:
+    get:
+      tags: [Disciplinas]
+      summary: Lista todas as disciplinas
+      responses:
+        "200":
+          description: Lista de disciplinas
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  $ref: "#/components/schemas/Disciplina"
+    post:
+      tags: [Disciplinas]
+      summary: Cria uma nova disciplina
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: "#/components/schemas/DisciplinaInput"
+      responses:
+        "201":
+          description: Disciplina criada
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/Disciplina"
+        "400":
+          $ref: "#/components/responses/Error"
+  /disciplinas/{id}:
+    put:
+      tags: [Disciplinas]
+      summary: Atualiza uma disciplina existente
+      parameters:
+        - $ref: "#/components/parameters/Id"
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: "#/components/schemas/DisciplinaInput"
+      responses:
+        "200":
+          description: Disciplina atualizada
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/Disciplina"
+        "400":
+          $ref: "#/components/responses/Error"
+        "404":
+          $ref: "#/components/responses/Error"
+    delete:
+      tags: [Disciplinas]
+      summary: Remove uma disciplina
+      parameters:
+        - $ref: "#/components/parameters/Id"
+      responses:
+        "204":
+          description: Disciplina removida
+        "404":
+          $ref: "#/components/responses/Error"
+components:
+  parameters:
+    Id:
+      name: id
+      in: path
+      required: true
+      schema:
+        type: integer
+  responses:
+    Error:
+      description: Erro de requisição
+      content:
+        application/json:
+          schema:
+            $ref: "#/components/schemas/ErrorBody"
+  schemas:
+    ErrorBody:
+      type: object
+      required: [message]
+      properties:
+        message:
+          type: string
+      example:
+        message: "Mensagem descritiva do erro"
+    Aluno:
+      allOf:
+        - $ref: "#/components/schemas/AlunoInput"
+        - type: object
+          required: [id]
+          properties:
+            id:
+              type: integer
+              example: 1
+    AlunoInput:
+      type: object
+      required: [nome, email, matricula, dataNascimento, status]
+      properties:
+        nome:
+          type: string
+          example: "Maria Silva"
+        email:
+          type: string
+          format: email
+          example: "maria.silva@email.com"
+        matricula:
+          type: string
+          example: "2026001"
+        dataNascimento:
+          type: string
+          format: date
+          example: "2005-03-14"
+        status:
+          type: string
+          enum: [ativo, inativo]
+          default: ativo
+    Professor:
+      allOf:
+        - $ref: "#/components/schemas/ProfessorInput"
+        - type: object
+          required: [id]
+          properties:
+            id:
+              type: integer
+              example: 1
+    ProfessorInput:
+      type: object
+      required: [nome, email, especialidade, status]
+      properties:
+        nome:
+          type: string
+          example: "João Souza"
+        email:
+          type: string
+          format: email
+          example: "joao.souza@email.com"
+        especialidade:
+          type: string
+          example: "Matemática"
+        status:
+          type: string
+          enum: [ativo, inativo]
+          default: ativo
+    Disciplina:
+      allOf:
+        - $ref: "#/components/schemas/DisciplinaInput"
+        - type: object
+          required: [id]
+          properties:
+            id:
+              type: integer
+              example: 1
+    DisciplinaInput:
+      type: object
+      required: [nome, cargaHoraria, professorId, alunosIds]
+      properties:
+        nome:
+          type: string
+          example: "Álgebra Linear"
+        cargaHoraria:
+          type: integer
+          example: 60
+        professorId:
+          type: integer
+          example: 1
+        alunosIds:
+          type: array
+          minItems: 1
+          items:
+            type: integer
+          example: [1, 2]

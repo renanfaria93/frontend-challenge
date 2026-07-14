@@ -1,5 +1,5 @@
 import { useMemo, useState } from "react";
-import { Pencil, Plus, Trash2 } from "lucide-react";
+import { Pencil, Plus, Trash2, Users } from "lucide-react";
 import { PageContainer } from "@/components/shared/PageContainer";
 import { PageHeader } from "@/components/shared/PageHeader";
 import { SectionCard } from "@/components/shared/SectionCard";
@@ -23,6 +23,7 @@ import { useProfessores } from "@/features/professores/useProfessores";
 import { useAlunos } from "@/features/alunos/useAlunos";
 import { DisciplinaFormModal } from "./DisciplinaFormModal";
 import { DisciplinaDeleteDialog } from "./DisciplinaDeleteDialog";
+import { DisciplinaAlunosDialog } from "./DisciplinaAlunosDialog";
 
 export default function DisciplinasPage() {
   const disciplinasQuery = useDisciplinas();
@@ -36,9 +37,11 @@ export default function DisciplinasPage() {
     disciplina: null,
   });
   const [deleteTarget, setDeleteTarget] = useState<Disciplina | null>(null);
+  const [alunosTarget, setAlunosTarget] = useState<Disciplina | null>(null);
 
   const professores = professoresQuery.data ?? [];
   const disciplinas = disciplinasQuery.data ?? [];
+  const alunos = alunosQuery.data ?? [];
 
   const professoresPorId = useMemo(
     () => new Map(professores.map((professor) => [professor.id, professor])),
@@ -83,6 +86,14 @@ export default function DisciplinasPage() {
       className: "text-right",
       render: (disciplina) => (
         <div className="flex justify-end gap-2">
+          <Button
+            variant="ghost"
+            size="icon"
+            aria-label={`Ver alunos matriculados em ${disciplina.nome}`}
+            onClick={() => setAlunosTarget(disciplina)}
+          >
+            <Users className="h-4 w-4" />
+          </Button>
           <Button
             variant="ghost"
             size="icon"
@@ -188,6 +199,12 @@ export default function DisciplinasPage() {
       <DisciplinaDeleteDialog
         disciplina={deleteTarget}
         onOpenChange={(open) => !open && setDeleteTarget(null)}
+      />
+
+      <DisciplinaAlunosDialog
+        disciplina={alunosTarget}
+        alunos={alunos}
+        onOpenChange={(open) => !open && setAlunosTarget(null)}
       />
     </PageContainer>
   );

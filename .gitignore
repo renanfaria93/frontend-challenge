@@ -11,3 +11,6 @@
 
 # Local dev tooling (browser preview config, not part of the app deliverable)
 .claude/launch.json
+
+# Gerado a partir de contract/openapi.yaml.template (envsubst/Docker), não deve ser versionado
+contract/openapi.yaml

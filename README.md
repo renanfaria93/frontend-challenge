@@ -4,7 +4,7 @@ Frontend completo de um mini-SaaS administrativo, disponibilizado como desafio p
 
 ## O desafio
 
-Implemente uma API REST (na linguagem/framework de sua escolha) que sirva o CRUD de três entidades — **Alunos**, **Professores** e **Disciplinas** — seguindo exatamente o contrato descrito em [`contract/openapi.yaml`](./contract/openapi.yaml). Depois de rodar sua API, aponte o frontend para ela (via `VITE_API_URL`) e todas as telas passam a funcionar com dados reais.
+Implemente uma API REST (na linguagem/framework de sua escolha) que sirva o CRUD de três entidades — **Alunos**, **Professores** e **Disciplinas** — seguindo exatamente o contrato descrito em [`contract/openapi.yaml.template`](./contract/openapi.yaml.template). Depois de rodar sua API, aponte o frontend para ela (via `VITE_API_URL`) e todas as telas passam a funcionar com dados reais.
 
 ## Estrutura do repositório
 
@@ -23,13 +23,15 @@ Pré-requisito: Docker e Docker Compose instalados.
 ```bash
 git clone <url-deste-repositorio>
 cd frontend-challenge
-VITE_API_URL=http://localhost:3000 docker compose up --build
+VITE_API_URL=http://localhost:5000 CONTRACT_API_URL=http://localhost:5000 docker compose up --build
 ```
 
 - Frontend: `http://localhost:8080`
 - Swagger UI do contrato: `http://localhost:4000`
 
-`VITE_API_URL` deve apontar para a API que você implementou (padrão `http://localhost:3000` se a variável for omitida). Ela é embutida no bundle em **build-time**, então trocar a URL exige `docker compose up --build` novamente.
+`VITE_API_URL` deve apontar para a API que você implementou (padrão `http://localhost:5000` se a variável for omitida). Ela é embutida no bundle em **build-time**, então trocar a URL exige `docker compose up --build` novamente.
+
+`CONTRACT_API_URL` controla o `servers.url` exibido no Swagger UI do contrato (padrão também `http://localhost:5000`). É uma variável separada da `VITE_API_URL` — ambas costumam apontar para a mesma API, mas são configuradas independentemente e aplicadas em **runtime** do container (não precisa rebuildar para trocar).
 
 Para rodar cada projeto individualmente (sem Docker, com hot-reload) veja [`frontend/README.md`](./frontend/README.md). Para consultar o contrato interativamente veja [`contract/README.md`](./contract/README.md).
 
@@ -56,7 +58,7 @@ DELETE /disciplinas/:id   -> (204)
 
 Qualquer erro (400/404/409/500) deve retornar corpo `{ "message": string }` — o frontend exibe essa mensagem diretamente (via toast em mutations, via tela de erro em falhas de listagem).
 
-A especificação completa (schemas, exemplos, códigos de status) está em [`contract/openapi.yaml`](./contract/openapi.yaml). Para consultar interativamente via Swagger UI, veja [`contract/README.md`](./contract/README.md).
+A especificação completa (schemas, exemplos, códigos de status) está em [`contract/openapi.yaml.template`](./contract/openapi.yaml.template). Para consultar interativamente via Swagger UI, veja [`contract/README.md`](./contract/README.md).
 
 ## Modelo de dados
 

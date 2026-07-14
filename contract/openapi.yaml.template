@@ -6,7 +6,7 @@ info:
     Todas as respostas de erro seguem o formato { "message": string }.
   version: "1.0.0"
 servers:
-  - url: http://localhost:3000
+  - url: ${CONTRACT_API_URL}
     description: Servidor local de desenvolvimento
 tags:
   - name: Alunos

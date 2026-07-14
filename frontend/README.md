@@ -1,6 +1,6 @@
 # Frontend
 
-Aplicação React deste monorepo. Consome exclusivamente a API REST externa descrita em [`../contract/openapi.yaml`](../contract/openapi.yaml) — não há backend, mock ou dado local aqui. Veja o [README raiz](../README.md) para o contexto completo do desafio.
+Aplicação React deste monorepo. Consome exclusivamente a API REST externa descrita em [`../contract/openapi.yaml.template`](../contract/openapi.yaml.template) — não há backend, mock ou dado local aqui. Veja o [README raiz](../README.md) para o contexto completo do desafio.
 
 ## Stack
 
@@ -14,7 +14,7 @@ Pré-requisitos: Node.js 20+ e uma API rodando localmente (ou acessível via URL
 cd frontend
 npm install
 cp .env.example .env
-# edite .env se sua API não estiver em http://localhost:3000
+# edite .env se sua API não estiver em http://localhost:5000
 npm run dev
 ```
 
@@ -24,7 +24,7 @@ Acesse `http://localhost:5173`.
 
 | Variável       | Descrição                                        | Padrão                  |
 | -------------- | ------------------------------------------------ | ----------------------- |
-| `VITE_API_URL` | URL base da API REST que o frontend vai consumir | `http://localhost:3000` |
+| `VITE_API_URL` | URL base da API REST que o frontend vai consumir | `http://localhost:5000` |
 
 `VITE_API_URL` é embutida no bundle em **build-time** (comportamento padrão do Vite) — ao buildar a imagem Docker, ela precisa ser passada como build-arg (veja abaixo), não como variável de ambiente do container em runtime.
 
@@ -32,7 +32,7 @@ Acesse `http://localhost:5173`.
 
 ```bash
 cd frontend
-docker build --build-arg VITE_API_URL=http://localhost:3000 -t frontend-challenge-web .
+docker build --build-arg VITE_API_URL=http://localhost:5000 -t frontend-challenge-web .
 docker run -p 8080:80 frontend-challenge-web
 ```
 

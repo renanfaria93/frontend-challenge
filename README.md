@@ -1,6 +1,14 @@
 # Frontend Challenge
 
+[![GitHub](https://img.shields.io/badge/GitHub-renanfaria93%2Ffrontend--challenge-181717?logo=github)](https://github.com/renanfaria93/frontend-challenge)
+
 Frontend completo de um mini-SaaS administrativo, disponibilizado como desafio para você implementar o backend (API REST + banco de dados). Este repositório **não contém nenhum backend nem dado mockado** — toda informação exibida na tela vem da API que você vai construir, seguindo o contrato documentado em [`contract/`](./contract).
+
+## Screenshots
+
+| Lista de alunos | Edição de disciplina | Contrato (Swagger UI) |
+| --- | --- | --- |
+| ![Lista de alunos](./public/screenshots/alunos.png) | ![Formulário de edição de disciplina](./public/screenshots/disciplinas.png) | ![Swagger UI do contrato](./public/screenshots/swagger.png) |
 
 ## O desafio
 
